@@ -6,5 +6,31 @@
 
 
 {% block body %}
+<form action="/" method="POST">
+    <input type="text" name="postId" placeholder="Post ID">
+    <input type="text" name="id" placeholder="Commenter ID">
+    <input type="text" name="email" placeholder="Commenter Email">
+    <input type="text" name="name" placeholder="Commenter Name">
+    <input type="text" name="body" placeholder="Comment Content">
+    <input type="submit" value="Filter">
+</form>
 
+<table>
+    <tr>
+      <th>Post Id</th>
+      <th>Id</th>
+      <th>Email</th>
+      <th>Name</th>
+      <th>Content</th>
+    </tr>
+    {% for comment in filteredComments["listOfComments"] %}
+    <tr>
+      <td>{{ comment["postId"] }}</td>
+      <td>{{ comment["id"] }}</td>
+      <td>{{ comment["email"] }}</td>
+      <td>{{ comment["name"] }}</td>
+      <td>{{ comment["body"] }}</td>
+    </tr>
+    {% endfor %}
+  </table>
 {% endblock %}

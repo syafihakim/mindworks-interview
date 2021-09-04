@@ -1,37 +1,43 @@
 import graphene
 import json
-from datetime import datetime
+import urllib
 from graphene.types.objecttype import ObjectType
 
-COMMENTS = json.load(open('comments.json', ))
+link = "https://jsonplaceholder.typicode.com/comments"
+f = urllib.request.urlopen(link)
+myfile = f.read().decode()
+COMMENTS = json.loads(myfile)
 
-# =================== Objects ===================
 class Comment(ObjectType):
-    postId = graphene.ID()
-    id = graphene.ID()
+    postId = graphene.Int()
+    id = graphene.Int()
     name = graphene.String()
     email = graphene.String()
     body = graphene.String()
 
-# =================== Query Templates ===================
-
 class Query(ObjectType):
-    array = graphene.List(Comment)
+    listOfComments = graphene.List(
+        Comment, 
+        postId=graphene.Int(),
+        id = graphene.Int(),
+        name = graphene.String(),
+        email = graphene.String(),
+        body = graphene.String())
 
-    def resolve_array(root, info):
-        return COMMENTS
-
-# =================== Graphql Query ===================
-query_graphql = '''
-query myquery{
-    array {
-        name
-        id
-    }
-}
-'''
-
-# print(schema)
-schema = graphene.Schema(query=Query)
-result = schema.execute(query_graphql)
-print(json.dumps(result.data, indent=3))
+    def resolve_listOfComments(root, info, postId=None, id=None, name=None, email=None, body=None):
+        filteredComments = []
+        for comment in COMMENTS:
+            append = True
+            if(postId and postId != comment["postId"]):
+                append = False
+            if(id and id != comment["id"]):
+                append = False
+            if(name and name not in comment["name"]):
+                append = False
+            if(email and email not in comment["email"]):
+                append = False
+            if(body != None and body not in comment["body"]):
+                append = False
+            if(append == True):
+                filteredComments.append(comment)
+        return filteredComments
