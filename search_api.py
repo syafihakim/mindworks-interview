@@ -5,13 +5,15 @@ from graphene.types.objecttype import ObjectType
 
 schema = graphene.Schema(query=Query)
 
-def startSearching(postId, id, email, name, body) :
+# Purpose : Execute the query built from buildCommentQuery()
+# Return : The function returns a list of filtered comments - can be any fields
+def startSearching(postId="", id="", email="", name="", body="") :
     query = buildCommentQuery(postId, id, email, name, body)
     result = schema.execute(query)
-    #print(result)
-    print(query)
     return result.data
 
+# Purpose : Search comment with ANY match from ANY fields
+# Return : Returns 
 def buildCommentQuery(postId, id, email, name, body) :
     f_1 =  (f"postId : {postId}") if (postId != "") else ("")
     f_2 =  (f"id : {id}") if (id != "") else ("")
@@ -28,12 +30,4 @@ def buildCommentQuery(postId, id, email, name, body) :
             body   
         }}
     }}''')
-
-    # fields = f"query{{\nlistOfComments (postId: \"{postId}\"){{"
-    # if(postId != "") : fields += "\npostId"
-    # if(id != "") : id += "\nid"
-    # if(name != "") : name += "\nname"
-    # if(email != "") : email += "\nemail"
-    # if(body != "") : body += "\nbody"
-    # fields += "\n}\n}"
     return fields

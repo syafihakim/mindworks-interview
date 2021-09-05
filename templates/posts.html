@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<h1>All Posts</h1>
+{% endblock %}
+
+
+{% block body %}
+<table id="posts">
+    <tr>
+      <th>Post Id</th>
+      <th>Post Title</th>
+    </tr>
+    {% for post in postsOnCurrPage["simplePostList"] %}
+    <tr>
+      <td>{{ post["id"] }}</td>
+      <td><a href='post/{{post["id"]}}'>{{ post["title"] }}</a></td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <div class="b-pagination-outer">
+    <ul id="border-pagination">
+      {% for page in range(1, totalPages+1) %}
+      <li><a href="{{page}}">{{page}}</a></li>
+      {% endfor %}
+    </ul> 
+  </div>
+
+{% endblock %}
